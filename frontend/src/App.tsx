@@ -6,7 +6,7 @@ import { Mountain } from './components/Mountain'
 
 function App() {
   const [currentTab, setCurrentTab] = useState('home');
-  const [dotCount, setDotCount] = useState(100); // This controls the number of blue dots
+  const [dotCount, setDotCount] = useState(15); // This controls the number of blue dots
   const [debug, setDebug] = useState(false); // Toggle debug mode to show/hide red dots
 
   const handleTabChange = (tab: string) => {
@@ -29,7 +29,7 @@ function App() {
               </div>
               <Mountain 
                 dotCount={dotCount} 
-                debug={debug}
+                
               />
             </div>
           </div>
