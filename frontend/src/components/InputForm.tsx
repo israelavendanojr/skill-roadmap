@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './InputForm.css';
+import ClimberIcon from '../art/climbers/z.svg';
 
 const LEVELS = ['beginner', 'intermediate', 'advanced', 'expert'];
 
@@ -239,7 +240,7 @@ function InputForm() {
                       value="casual"
                       onChange={(e) => setCommitment(e.target.value)}
                     />
-                    <span className="custom-radio" />
+                    <span className="custom-radio">{commitment === 'casual' ? '✓' : ''}</span>
                     <label htmlFor="casual">Casual (1-2 hrs/week)</label>
                   </div>
                   <div className="skill-option">
@@ -250,7 +251,7 @@ function InputForm() {
                       value="dedicated"
                       onChange={(e) => setCommitment(e.target.value)}
                     />
-                    <span className="custom-radio" />
+                    <span className="custom-radio">{commitment === 'dedicated' ? '✓' : ''}</span>
                     <label htmlFor="dedicated">Dedicated (5-10 hrs/week)</label>
                   </div>
                   <div className="skill-option">
@@ -261,12 +262,18 @@ function InputForm() {
                       value="intensive"
                       onChange={(e) => setCommitment(e.target.value)}
                     />
-                    <span className="custom-radio" />
+                    <span className="custom-radio">{commitment === 'intensive' ? '✓' : ''}</span>
                     <label htmlFor="intensive">Intensive (15+ hrs/week)</label>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div className="button-group">
+            <button type="submit" className="action-button primary">
+              Start your climb!
+              <span className="button-icon"><img src={ClimberIcon} alt="Climber" /></span>
+            </button>
           </div>
         </form>
       </div>
