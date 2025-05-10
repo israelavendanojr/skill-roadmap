@@ -196,17 +196,28 @@
 }
 
 .action-button.primary {
-  background: #475569;
-  color: white;
+  background: #e6f1f5;
+  color: #34505e;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  border: 1.5px solid #b7d3df;
 }
 
 .action-button.primary:hover {
-  background: #334155;
-  transform: translateY(-1px);
+  background: #d7e7f2;
+  color: #34505e;
 }
 
 .button-icon {
   font-size: 1.2rem;
+}
+
+.button-icon img {
+  height: 2.5rem;
+  width: auto;
+  max-width: 3.5rem;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 @media (max-width: 1024px) {
@@ -481,12 +492,20 @@
 }
 
 .action-button.primary:hover {
-  background: #34505e;
-  transform: translateY(-1px);
+  background: #d7e7f2;
+  color: #34505e;
 }
 
 .button-icon {
   font-size: 1.2rem;
+}
+
+.button-icon img {
+  height: 2.5rem;
+  width: auto;
+  max-width: 3.5rem;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 @media (max-width: 1024px) {
