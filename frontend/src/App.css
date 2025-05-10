@@ -14,17 +14,16 @@
   padding-top: 0.75rem;
 }
 
-/* Title section styling without background */
+/* Title section styling */
 .title-section {
   max-width: 800px;
-  margin: 0 auto 1rem; /* Reduced from 2rem to bring map closer to description */
+  margin: 0 auto 1rem;
   padding: 0 1rem;
-  /* Add a subtle space at the top of the title section */
   padding-top: 1rem;
 }
 
 .app-title {
-  font-size: 3.6em;
+  font-size: 4em;
   line-height: 1.1;
   margin: 0;
   color: #2563eb;
@@ -93,7 +92,25 @@
     padding-top: 2rem;
   }
   
+  .app-title {
+    font-size: 3em;
+  }
+  
   .app-subtitle {
     white-space: normal;
   }
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+input {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
