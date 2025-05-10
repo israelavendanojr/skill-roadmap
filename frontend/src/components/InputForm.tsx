@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import './InputForm.css';
 
+const LEVELS = ['beginner', 'intermediate', 'advanced', 'expert'];
+
 function InputForm() {
   const [currentLevel, setCurrentLevel] = useState('');
   const [desiredLevel, setDesiredLevel] = useState('');
   const [commitment, setCommitment] = useState('');
   const [learningGoal, setLearningGoal] = useState('');
   const [purpose, setPurpose] = useState('');
-  const [openCard, setOpenCard] = useState<string | null>(null);
+  const [openCards, setOpenCards] = useState<Set<string>>(new Set());
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +23,23 @@ function InputForm() {
   };
 
   const handleCardClick = (card: string) => {
-    setOpenCard(openCard === card ? null : card);
+    setOpenCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(card)) {
+        newSet.delete(card);
+      } else {
+        newSet.add(card);
+      }
+      return newSet;
+    });
+  };
+
+  // Helper to determine if a summit level should be disabled
+  const isSummitDisabled = (level: string) => {
+    if (!currentLevel) return false;
+    const currentIdx = LEVELS.indexOf(currentLevel);
+    const summitIdx = LEVELS.indexOf(level);
+    return summitIdx <= currentIdx && currentIdx !== -1;
   };
 
   return (
@@ -57,12 +75,12 @@ function InputForm() {
           <div className="form-columns ascent-cards">
             {/* Base Camp Card */}
             <div
-              className={`form-column ascent-card${openCard === 'base' ? ' open' : ''}`}
+              className={`form-column ascent-card${openCards.has('base') ? ' open' : ''}`}
               tabIndex={0}
               onClick={() => handleCardClick('base')}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleCardClick('base'); }}
               role="button"
-              aria-expanded={openCard === 'base'}
+              aria-expanded={openCards.has('base')}
             >
               <div className="ascent-icon">
                 {/* Mountain SVG */}
@@ -73,17 +91,23 @@ function InputForm() {
               </div>
               <h3 className="column-title ascent-card-title">Base Camp</h3>
               <div className="ascent-card-subtitle">Choose your current level</div>
-              <div className={`skill-box${openCard === 'base' ? ' expanded' : ''}`} onClick={e => e.stopPropagation()}>
-                <div className={`skill-box-content${openCard === 'base' ? ' visible' : ''}`}> 
-                  <div className="skill-option">
+              <div className={`skill-box${openCards.has('base') ? ' expanded' : ''}`} onClick={e => e.stopPropagation()}>
+                <div className={`skill-box-content${openCards.has('base') ? ' visible' : ''}`}> 
+                <div className="skill-option">
                     <input
                       type="radio"
-                      id="base-none"
+                      id="base-None"
                       name="currentLevel"
                       value="None"
-                      onChange={(e) => setCurrentLevel(e.target.value)}
+                      onChange={(e) => {
+                        setCurrentLevel(e.target.value);
+                        setDesiredLevel('');
+                      }}
+                      checked={currentLevel === 'None'}
+                      readOnly
                     />
-                    <label htmlFor="base-none">No Experience</label>
+                    <span className="custom-radio">{currentLevel === 'None' ? '✓' : ''}</span>
+                    <label htmlFor="base-None">No Experience</label>
                   </div>
                   <div className="skill-option">
                     <input
@@ -91,8 +115,14 @@ function InputForm() {
                       id="base-beginner"
                       name="currentLevel"
                       value="beginner"
-                      onChange={(e) => setCurrentLevel(e.target.value)}
+                      onChange={(e) => {
+                        setCurrentLevel(e.target.value);
+                        setDesiredLevel('');
+                      }}
+                      checked={currentLevel === 'beginner'}
+                      readOnly
                     />
+                    <span className="custom-radio">{currentLevel === 'beginner' ? '✓' : ''}</span>
                     <label htmlFor="base-beginner">Beginner</label>
                   </div>
                   <div className="skill-option">
@@ -101,8 +131,14 @@ function InputForm() {
                       id="base-intermediate"
                       name="currentLevel"
                       value="intermediate"
-                      onChange={(e) => setCurrentLevel(e.target.value)}
+                      onChange={(e) => {
+                        setCurrentLevel(e.target.value);
+                        setDesiredLevel('');
+                      }}
+                      checked={currentLevel === 'intermediate'}
+                      readOnly
                     />
+                    <span className="custom-radio">{currentLevel === 'intermediate' ? '✓' : ''}</span>
                     <label htmlFor="base-intermediate">Intermediate</label>
                   </div>
                   <div className="skill-option">
@@ -111,8 +147,14 @@ function InputForm() {
                       id="base-advanced"
                       name="currentLevel"
                       value="advanced"
-                      onChange={(e) => setCurrentLevel(e.target.value)}
+                      onChange={(e) => {
+                        setCurrentLevel(e.target.value);
+                        setDesiredLevel('');
+                      }}
+                      checked={currentLevel === 'advanced'}
+                      readOnly
                     />
+                    <span className="custom-radio">{currentLevel === 'advanced' ? '✓' : ''}</span>
                     <label htmlFor="base-advanced">Advanced</label>
                   </div>
                 </div>
@@ -121,12 +163,12 @@ function InputForm() {
 
             {/* Summit Goal Card */}
             <div
-              className={`form-column ascent-card${openCard === 'summit' ? ' open' : ''}`}
+              className={`form-column ascent-card${openCards.has('summit') ? ' open' : ''}`}
               tabIndex={0}
               onClick={() => handleCardClick('summit')}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleCardClick('summit'); }}
               role="button"
-              aria-expanded={openCard === 'summit'}
+              aria-expanded={openCards.has('summit')}
             >
               <div className="ascent-icon">
                 {/* Summit/Flag SVG */}
@@ -139,72 +181,56 @@ function InputForm() {
               </div>
               <h3 className="column-title ascent-card-title">Summit Goal</h3>
               <div className="ascent-card-subtitle">Your destination skill</div>
-              <div className={`skill-box${openCard === 'summit' ? ' expanded' : ''}`} onClick={e => e.stopPropagation()}>
-                <div className={`skill-box-content${openCard === 'summit' ? ' visible' : ''}`}> 
-                  <div className="skill-option">
-                    <input
-                      type="radio"
-                      id="summit-beginner"
-                      name="desiredLevel"
-                      value="beginner"
-                      onChange={(e) => setDesiredLevel(e.target.value)}
-                    />
-                    <label htmlFor="summit-beginner">Beginner</label>
-                  </div>
-                  <div className="skill-option">
-                    <input
-                      type="radio"
-                      id="summit-intermediate"
-                      name="desiredLevel"
-                      value="intermediate"
-                      onChange={(e) => setDesiredLevel(e.target.value)}
-                    />
-                    <label htmlFor="summit-intermediate">Intermediate</label>
-                  </div>
-                  <div className="skill-option">
-                    <input
-                      type="radio"
-                      id="summit-advanced"
-                      name="desiredLevel"
-                      value="advanced"
-                      onChange={(e) => setDesiredLevel(e.target.value)}
-                    />
-                    <label htmlFor="summit-advanced">Advanced</label>
-                  </div>
-                  <div className="skill-option">
-                    <input
-                      type="radio"
-                      id="summit-expert"
-                      name="desiredLevel"
-                      value="expert"
-                      onChange={(e) => setDesiredLevel(e.target.value)}
-                    />
-                    <label htmlFor="summit-expert">Expert</label>
-                  </div>
+              <div className={`skill-box${openCards.has('summit') ? ' expanded' : ''}`} onClick={e => e.stopPropagation()}>
+                <div className={`skill-box-content${openCards.has('summit') ? ' visible' : ''}`}> 
+                  {LEVELS.map(level => {
+                    const disabled = isSummitDisabled(level);
+                    const checked = desiredLevel === level;
+                    return (
+                      <div className={`skill-option${disabled ? ' disabled' : ''}`} key={level}>
+                        <input
+                          type="radio"
+                          id={`summit-${level}`}
+                          name="desiredLevel"
+                          value={level}
+                          onChange={(e) => setDesiredLevel(e.target.value)}
+                          disabled={disabled}
+                          checked={checked}
+                          readOnly
+                        />
+                        <span className="custom-radio">
+                          {disabled ? '✕' : checked ? '✓' : ''}
+                        </span>
+                        <label htmlFor={`summit-${level}`}>{level.charAt(0).toUpperCase() + level.slice(1)}</label>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
             {/* Trail Time Card */}
             <div
-              className={`form-column ascent-card${openCard === 'trail' ? ' open' : ''}`}
+              className={`form-column ascent-card${openCards.has('trail') ? ' open' : ''}`}
               tabIndex={0}
               onClick={() => handleCardClick('trail')}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleCardClick('trail'); }}
               role="button"
-              aria-expanded={openCard === 'trail'}
+              aria-expanded={openCards.has('trail')}
             >
               <div className="ascent-icon">
                 {/* Trail SVG */}
                 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8 56C16 40 32 40 56 8" stroke="#598294" strokeWidth="4" strokeLinecap="round"/>
-                  <path d="M8 56L24 40L40 56" fill="#7BA6B6"/>
+                  <path d="M12 56L32 28L44 44L52 36L60 56H12Z" fill="#7BA6B6"/>
+                  <path d="M32 28L44 44L52 36" stroke="#598294" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M32 28V12" stroke="#598294" strokeWidth="3" strokeLinecap="round"/>
+                  <path d="M32 12L40 16L32 20V12Z" fill="#598294"/>
                 </svg>
               </div>
               <h3 className="column-title ascent-card-title">Trail Time</h3>
-              <div className="ascent-card-subtitle">Weekly learning pace</div>
-              <div className={`skill-box${openCard === 'trail' ? ' expanded' : ''}`} onClick={e => e.stopPropagation()}>
-                <div className={`skill-box-content${openCard === 'trail' ? ' visible' : ''}`}> 
+              <div className="ascent-card-subtitle">Choose your commitment level</div>
+              <div className={`skill-box${openCards.has('trail') ? ' expanded' : ''}`} onClick={e => e.stopPropagation()}>
+                <div className={`skill-box-content${openCards.has('trail') ? ' visible' : ''}`}> 
                   <div className="skill-option">
                     <input
                       type="radio"
@@ -213,6 +239,7 @@ function InputForm() {
                       value="casual"
                       onChange={(e) => setCommitment(e.target.value)}
                     />
+                    <span className="custom-radio" />
                     <label htmlFor="casual">Casual (1-2 hrs/week)</label>
                   </div>
                   <div className="skill-option">
@@ -223,6 +250,7 @@ function InputForm() {
                       value="dedicated"
                       onChange={(e) => setCommitment(e.target.value)}
                     />
+                    <span className="custom-radio" />
                     <label htmlFor="dedicated">Dedicated (5-10 hrs/week)</label>
                   </div>
                   <div className="skill-option">
@@ -233,18 +261,12 @@ function InputForm() {
                       value="intensive"
                       onChange={(e) => setCommitment(e.target.value)}
                     />
+                    <span className="custom-radio" />
                     <label htmlFor="intensive">Intensive (15+ hrs/week)</label>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="button-group">
-            <button type="submit" className="action-button primary">
-              <span className="button-icon">🚀</span>
-              Start Learning Journey
-            </button>
           </div>
         </form>
       </div>
@@ -252,4 +274,4 @@ function InputForm() {
   );
 }
 
-export default InputForm; 
+export default InputForm;
