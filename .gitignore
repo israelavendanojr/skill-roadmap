@@ -6,7 +6,6 @@
 /frontend/.pnp.js
 /frontend/coverage
 /frontend/build
-/frontend/.env
 /frontend/.env.local
 /frontend/.env.development.local
 /frontend/.env.test.local
@@ -18,7 +17,6 @@
 # Backend
 /backend/__pycache__/
 /backend/*.pyc
-/backend/.env
 /backend/.env.local
 /backend/.env.*.local
 
@@ -32,3 +30,4 @@
 
 # Virtual Environment
 .venv/
+.env
