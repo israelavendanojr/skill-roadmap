@@ -30,5 +30,7 @@
 
 # Virtual Environment
 .venv/
-.env
+.pathora_venv/
 
+# Enviornment Variable
+.env
