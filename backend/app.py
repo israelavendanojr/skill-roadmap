@@ -14,7 +14,8 @@ CORS(app)
 # Initialize APIs
 wiki = wikipediaapi.Wikipedia(
     language='en',
-    extract_format=wikipediaapi.ExtractFormat.WIKI
+    extract_format=wikipediaapi.ExtractFormat.WIKI,
+    user_agent='skill-roadmap-app/1.0 (contact@example.com)'
 )
 
 # Initialize SerpAPI
