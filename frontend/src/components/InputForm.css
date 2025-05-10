@@ -121,10 +121,11 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem;
+  padding: 0.75rem 0.5rem;
   border-radius: 8px;
-  transition: all 0.2s ease;
+  transition: background 0.2s;
   cursor: pointer;
+  position: relative;
 }
 
 .skill-option:hover {
@@ -132,17 +133,45 @@
 }
 
 .skill-option input[type="radio"] {
-  width: 1.2rem;
-  height: 1.2rem;
-  accent-color: #475569;
-  cursor: pointer;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
 }
 
-.skill-option label {
-  color: #475569;
-  font-size: 1rem;
-  cursor: pointer;
-  flex: 1;
+.custom-radio {
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 2px solid #598294;
+  border-radius: 4px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #34505e;
+  transition: border-color 0.2s, background 0.2s;
+  margin-right: 0.5rem;
+}
+
+.skill-option input[type="radio"]:checked + .custom-radio {
+  border-color: #34505e;
+  background: #e6f1f5;
+}
+
+.skill-option.disabled .custom-radio {
+  border-color: #b0b7be !important;
+  background: #f3f4f6 !important;
+}
+
+.skill-option.disabled label {
+  color: #b0b7be;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.skill-option.disabled input[type="radio"] {
+  cursor: not-allowed;
 }
 
 .button-group {
@@ -523,4 +552,14 @@
   opacity: 1;
   transform: none;
   pointer-events: auto;
+}
+
+.skill-option.disabled label {
+  color: #b0b7be;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.skill-option.disabled input[type="radio"] {
+  cursor: not-allowed;
 } 
