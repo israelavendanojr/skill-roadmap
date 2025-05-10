@@ -127,13 +127,13 @@ body {
 
 .dot {
   position: absolute;
-  border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
-  width: 8px;
-  height: 8px;
-  background-color: #3b82f6;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border: 2px solid white;
   z-index: 5;
 }
 

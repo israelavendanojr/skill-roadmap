@@ -1,13 +1,10 @@
 import { motion } from 'framer-motion';
 
 interface MountainProps {
-  dotCount: number; // Number of blue dots to place along the path
+  dotCount: number; // Number of squares to place along the path
   dotSize?: number;
   dotSpacing?: number;
-  minPoints?: {
-    x: number;
-    y: number;
-  }[];
+  pathFunction?: (x: number) => number; // Function to calculate y position from x
   debug?: boolean; // Controls visibility of red dots for debugging
 }
 
@@ -19,11 +16,20 @@ const defaultMinPoints = [
   { x: 500, y: 150 }      
 ];
 
+const defaultPathFunction = (x: number) => {
+  // Simple quadratic function that creates a mountain-like curve
+  // Adjust the coefficients to change the shape
+  const a = -0.0015; // Controls the steepness
+  const b = 0.008;    // Controls the position
+  const c = 600;     // Controls the height
+  return a * Math.pow(x, 2) + b * x + c;
+};
+
 export const Mountain: React.FC<MountainProps> = ({ 
-  dotCount = 10, // This controls the number of blue dots
+  dotCount = 10, // This controls the number of squares
   dotSize = 8, 
   dotSpacing = 30,
-  minPoints = defaultMinPoints,
+  pathFunction = defaultPathFunction,
   debug = false
 }) => {
   const mountainHeight = 600;
@@ -31,45 +37,17 @@ export const Mountain: React.FC<MountainProps> = ({
   const pathWidth = 3;
   const curveStrength = 0.5; // Controls how curved the path is
 
-  // Calculate points along the path using Bezier curve
+  // Calculate points along the path using the provided function
   const calculatePathPoints = () => {
     const points: { x: number; y: number }[] = [];
+    const mountainWidth = 800;
     
-    // Calculate points between each pair of minPoints
-    for (let i = 0; i < minPoints.length - 1; i++) {
-      const start = minPoints[i];
-      const end = minPoints[i + 1];
-      const controlPoint = {
-        x: (start.x + end.x) / 2,
-        y: (start.y + end.y) / 2
-      };
-      
-      // Calculate how many points to place between this pair
-      const pointsBetween = Math.floor(dotCount / (minPoints.length - 1));
-      
-      // Add points between start and control point
-      for (let j = 0; j <= pointsBetween / 2; j++) {
-        const t = j / (pointsBetween / 2);
-        const x = Math.pow(1 - t, 2) * start.x + 
-                 2 * (1 - t) * t * controlPoint.x + 
-                 Math.pow(t, 2) * controlPoint.x;
-        const y = Math.pow(1 - t, 2) * start.y + 
-                 2 * (1 - t) * t * controlPoint.y + 
-                 Math.pow(t, 2) * controlPoint.y;
-        points.push({ x, y });
-      }
-      
-      // Add points between control point and end
-      for (let j = 0; j <= pointsBetween / 2; j++) {
-        const t = j / (pointsBetween / 2);
-        const x = Math.pow(1 - t, 2) * controlPoint.x + 
-                 2 * (1 - t) * t * end.x + 
-                 Math.pow(t, 2) * end.x;
-        const y = Math.pow(1 - t, 2) * controlPoint.y + 
-                 2 * (1 - t) * t * end.y + 
-                 Math.pow(t, 2) * end.y;
-        points.push({ x, y });
-      }
+    // Calculate the x positions for each dot
+    for (let i = 0; i < dotCount; i++) {
+      // Distribute dots evenly across the width
+      const x = (i / (dotCount - 1)) * mountainWidth;
+      const y = pathFunction(x);
+      points.push({ x, y });
     }
 
     return points;
@@ -135,12 +113,7 @@ export const Mountain: React.FC<MountainProps> = ({
         {generatePathPoints()}
       </div>
 
-      {/* Minimum Points (Debug) */}
-      {debug && (
-        <div className="absolute inset-0">
-          {generateMinPoints()}
-        </div>
-      )}
+
     </div>
   );
 };
