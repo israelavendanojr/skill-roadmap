@@ -51,7 +51,6 @@ export const Mountain: React.FC<MountainProps> = ({
 }) => {
   const mountainHeight = 600;
   const mountainWidth = 800;
-  const pathWidth = 3;
   const curveStrength = 0.5; // Controls how curved the path is
 
   // Calculate points along the path using the provided function
@@ -99,13 +98,7 @@ export const Mountain: React.FC<MountainProps> = ({
 
 
 
-  // Log the start and end points for debugging
-  console.log('Start Point:', startPoint);
-  console.log('End Point:', endPoint);
 
-  // Calculate points to verify their positions
-  const testPoints = calculatePathPoints();
-  console.log('Calculated Points:', testPoints);
 
   return (
     <div className="relative w-full h-[600px] bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 border-2 border-red-500">
@@ -118,32 +111,6 @@ export const Mountain: React.FC<MountainProps> = ({
             fill="rgba(0,0,0,0.05)"
           />
         </svg>
-      </div>
-
-      {/* Start and End Points (Red dots) */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="marker"
-          style={{
-            left: `${(startPoint.x / mountainWidth) * 100}%`,
-            top: `${(startPoint.y / mountainHeight) * 100}%`,
-            zIndex: 100, // Ensure dots appear above other elements
-          }}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-        />
-        <motion.div
-          className="marker"
-          style={{
-            left: `${(endPoint.x / mountainWidth) * 100}%`,
-            top: `${(endPoint.y / mountainHeight) * 100}%`,
-            zIndex: 100, // Ensure dots appear above other elements
-          }}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-        />
       </div>
 
       {/* Blue Points */}
