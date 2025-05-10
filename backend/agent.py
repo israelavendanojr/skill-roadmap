@@ -2,7 +2,6 @@ import json
 from dotenv import load_dotenv
 import os
 import requests
-import google.generativeai as genai
 from llama_index.core.agent import ReActAgent
 from llama_index.core.tools import FunctionTool
 from llama_index.llms.gemini import Gemini
@@ -12,7 +11,6 @@ load_dotenv()
 
 # Configure Gemini API
 GEMINI_API_KEY = os.getenv('GOOGLE_GENAI_API_KEY')
-genai.configure(api_key=GEMINI_API_KEY)
 
 
 def setup_react_agent():
