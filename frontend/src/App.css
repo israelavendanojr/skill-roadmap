@@ -5,6 +5,56 @@
   text-align: center;
 }
 
+/* App container styling */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Reduced from 2rem to bring map closer to description */
+  /* Add a modest padding to the top of the container */
+  padding-top: 0.75rem;
+}
+
+/* Title section styling without background */
+.title-section {
+  max-width: 800px;
+  margin: 0 auto 1rem; /* Reduced from 2rem to bring map closer to description */
+  padding: 0 1rem;
+  /* Add a subtle space at the top of the title section */
+  padding-top: 1rem;
+}
+
+.app-title {
+  font-size: 3.6em;
+  line-height: 1.1;
+  margin: 0;
+  color: #2563eb;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+/* Decorative underline */
+.title-underline {
+  height: 4px;
+  width: 120px;
+  background: linear-gradient(90deg, #2563eb, #93c5fd);
+  margin: 0 auto 1.5rem;
+  border-radius: 2px;
+}
+
+.app-subtitle {
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin: 0 auto;
+  white-space: nowrap;
+  line-height: 1.5;
+  font-weight: 400;
+  padding: 0 1rem;
+}
+
+/* Original styling */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -17,7 +67,6 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -26,17 +75,25 @@
     transform: rotate(360deg);
   }
 }
-
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
-
 .card {
   padding: 2em;
 }
-
 .read-the-docs {
   color: #888;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .title-section {
+    padding-top: 2rem;
+  }
+  
+  .app-subtitle {
+    white-space: normal;
+  }
 }
