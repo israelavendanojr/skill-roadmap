@@ -130,7 +130,7 @@ def generate_steps(
         llm=llm,
         verbose=True,
         system_prompt=system_prompt,
-        max_iterations=15  # Increase from default to avoid premature stopping
+        max_iterations=50  # Increase from default to avoid premature stopping
     )
     
     # Define the initial query to the agent

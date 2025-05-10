@@ -12,7 +12,7 @@ from agent import generate_steps
 from config import Config
 
 load_dotenv()
-REACT_APP_PORT = os.getenv('REACT_APP_PORT', 5000)
+REACT_APP_PORT = os.getenv('REACT_APP_PORT', 5050)
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +26,18 @@ wiki = wikipediaapi.Wikipedia(
 
 # Initialize SerpAPI
 serp_api_key = os.getenv('SERP_API_KEY')
+
+COMMITMENT_MAP = {
+    "casual": "No rush",
+    "dedicated": "Dedicated",
+    "intensive": "Intensive",
+    "moderate": "Moderate"
+}
+
+def capitalize_level(level):
+    if not level:
+        return level
+    return level[0].upper() + level[1:].lower()
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
@@ -111,35 +123,29 @@ def search_serp():
 # New endpoints for the Goal Planner
 @app.route('/api/goal-planner/create-plan', methods=['POST'])
 def create_learning_plan():
-    """
-    Create a personalized learning plan based on user input
-    """
+    print('received from front')
     try:
         data = request.json
-        
-        # Parse the goal format: "I want to _ to do _"
         skill = data.get('skill', '')
         goal_reason = data.get('goalReason', '')
-        
-        # Construct the full goal statement
         full_goal = f"I want to learn {skill} to {goal_reason}"
-        
-        # Format the input for our agent
+        commitment = COMMITMENT_MAP.get(data['commitment'].lower(), data['commitment'])
         formatted_input = {
             'goal': full_goal,
             'skill': skill,
             'skill_level': {
-                'current': data['currentLevel'],
-                'target': data['targetLevel']
+                'current': capitalize_level(data['currentLevel']),
+                'target': capitalize_level(data['targetLevel'])
             },
-            'commitment_level': data['commitment']
+            'commitment_level': commitment
         }
-        
-        # Generate the learning plan
         learning_plan = generate_steps(**formatted_input)
-        
-        return jsonify(learning_plan)
-    
+        if isinstance(learning_plan, dict) and 'steps' in learning_plan:
+            return jsonify(learning_plan['steps'])
+        elif isinstance(learning_plan, list):
+            return jsonify(learning_plan)
+        else:
+            return jsonify({"error": "Could not generate steps"}), 500
     except Exception as e:
         print(f"Error creating learning plan: {str(e)}")
         return jsonify({"error": str(e)}), 500
@@ -192,5 +198,5 @@ if __name__ == '__main__':
     if not Config.GOOGLE_GENAI_API_KEY:
         print("WARNING: No Gemini API key found. The application will not function correctly without it.")
     
-    port = int(REACT_APP_PORT) if REACT_APP_PORT else 5000
+    port = int(REACT_APP_PORT) if REACT_APP_PORT else 5050
     app.run(debug=True, host='0.0.0.0', port=port)
