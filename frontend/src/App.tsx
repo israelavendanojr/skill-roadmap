@@ -25,14 +25,7 @@ function App() {
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Number of Blue Dots: {dotCount}</span>
-                <button 
-                  onClick={() => setDebug(!debug)}
-                  className={`px-4 py-2 rounded ${
-                    debug ? 'bg-blue-500 text-white' : 'bg-gray-200'
-                  }`}
-                >
-                  {debug ? 'Hide Red Dots' : 'Show Red Dots'}
-                </button>
+                
               </div>
               <Mountain 
                 dotCount={dotCount} 

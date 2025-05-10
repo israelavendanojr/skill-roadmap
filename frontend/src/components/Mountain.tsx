@@ -8,14 +8,6 @@ interface MountainProps {
   debug?: boolean; // Controls visibility of red dots for debugging
 }
 
-const defaultMinPoints = [
-  { x: 80, y: 610 },      
-  { x: 300, y: 580 },     
-  { x: 450, y: 500 },    
-  { x: 480, y: 330 }, 
-  { x: 500, y: 150 }      
-];
-
 const defaultPathFunction = (x: number) => {
   // Simple quadratic function that creates a mountain-like curve
   // Adjust the coefficients to change the shape
@@ -74,22 +66,7 @@ export const Mountain: React.FC<MountainProps> = ({
     ));
   };
 
-  // Generate minimum points
-  const generateMinPoints = () => {
-    return minPoints.map((point, i) => (
-      <motion.div
-        key={i}
-        className="min-point"
-        style={{
-          left: `${(point.x / mountainWidth) * 100}%`,
-          top: `${(point.y / mountainHeight) * 100}%`,
-        }}
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: debug ? 1 : 0, scale: debug ? 1 : 0 }}
-        transition={{ delay: i * 0.1 }}
-      />
-    ));
-  };
+
 
 
 
@@ -112,7 +89,6 @@ export const Mountain: React.FC<MountainProps> = ({
       <div className="absolute inset-0">
         {generatePathPoints()}
       </div>
-
 
     </div>
   );
