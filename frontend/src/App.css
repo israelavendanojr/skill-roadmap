@@ -131,6 +131,10 @@ body {
   transform: translate(-50%, -50%);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
+  width: 8px;
+  height: 8px;
+  background-color: #3b82f6;
+  z-index: 5;
 }
 
 .min-point {
@@ -142,6 +146,7 @@ body {
   transform: translate(-50%, -50%);
   z-index: 10;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  opacity: 0;
 }
 
 .min-point::after {

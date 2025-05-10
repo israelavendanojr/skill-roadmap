@@ -6,7 +6,8 @@ import { Mountain } from './components/Mountain'
 
 function App() {
   const [currentTab, setCurrentTab] = useState('home');
-  const [dotCount, setDotCount] = useState(10); // This will be dynamically set from backend later
+  const [dotCount, setDotCount] = useState(10); // This controls the number of blue dots
+  const [debug, setDebug] = useState(false); // Toggle debug mode to show/hide red dots
 
   const handleTabChange = (tab: string) => {
     setCurrentTab(tab);
@@ -21,7 +22,23 @@ function App() {
         </div>
         {currentTab === 'home' && (
           <div className="mountain-container">
-            <Mountain dotCount={dotCount} />
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Number of Blue Dots: {dotCount}</span>
+                <button 
+                  onClick={() => setDebug(!debug)}
+                  className={`px-4 py-2 rounded ${
+                    debug ? 'bg-blue-500 text-white' : 'bg-gray-200'
+                  }`}
+                >
+                  {debug ? 'Hide Red Dots' : 'Show Red Dots'}
+                </button>
+              </div>
+              <Mountain 
+                dotCount={dotCount} 
+                debug={debug}
+              />
+            </div>
           </div>
         )}
         {currentTab === 'explore' && <InputForm />}
