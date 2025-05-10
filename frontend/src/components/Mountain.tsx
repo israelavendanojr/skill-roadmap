@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import './Mountain.css';
 
 interface MountainProps {
   dotCount: number; // Number of squares to place along the path
@@ -7,6 +8,7 @@ interface MountainProps {
   pathFunction?: (x: number) => number; // Function to calculate y position from x
   startPoint?: { x: number; y: number }; // Start point of the curve
   endPoint?: { x: number; y: number }; // End point of the curve
+  climberPosition?: number; // Position of the climber (0 to dotCount-1)
 }
 
 const defaultPathFunction = (x: number, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }) => {
@@ -47,7 +49,8 @@ export const Mountain: React.FC<MountainProps> = ({
   dotSpacing = 30,
   pathFunction = defaultPathFunction,
   startPoint = { x: 80, y: 620 },
-  endPoint = { x: 500, y: 180 }
+  endPoint = { x: 500, y: 180 },
+  climberPosition = 0 // Default climber position at start
 }) => {
   const mountainHeight = 600;
   const mountainWidth = 800;
@@ -116,6 +119,31 @@ export const Mountain: React.FC<MountainProps> = ({
       {/* Blue Points */}
       <div className="absolute inset-0">
         {generatePathPoints()}
+        
+        {/* Climber */}
+        {climberPosition !== undefined && (
+          <motion.div
+            className="climber absolute"
+            style={{
+              left: `${(calculatePathPoints()[climberPosition].x / mountainWidth) * 100}%`,
+              top: `${(calculatePathPoints()[climberPosition].y / mountainHeight) * 100}%`,
+              zIndex: 100, // Ensure climber appears above other elements
+              position: 'absolute',
+            }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img 
+              src="../images/jose.svg" 
+              alt="Climber" 
+              className="w-full h-full" 
+              style={{
+                transform: 'translate(-50%, -50%)', // Center the climber on the point
+              }}
+            />
+          </motion.div>
+        )}
       </div>
 
     </div>
