@@ -104,9 +104,17 @@
 }
 
 .skill-box {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+  margin-top: 0;
+}
+
+.skill-box.expanded {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 1.2rem;
 }
 
 .skill-option {
@@ -224,4 +232,295 @@
     font-size: 1rem;
     padding: 0.875rem 1.5rem;
   }
+}
+
+.input-form-page.mountain-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, #e6f1f5 0%, #b7d3df 100%);
+  z-index: 900;
+  overflow-y: auto;
+  padding-bottom: 80px;
+}
+
+.input-form-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+
+.form-title.ascent-title {
+  color: #34505e;
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  letter-spacing: -1px;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  flex: 1;
+}
+
+/* Text Input Section */
+.text-input-section.ascent-inputs {
+  background: rgba(255,255,255,0.95);
+  padding: 2rem 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(52, 80, 94, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.text-input-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.input-prefix {
+  color: #598294;
+  font-size: 1.5rem;
+  font-weight: 600;
+  white-space: nowrap;
+  min-width: 140px;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.text-input {
+  flex: 1;
+  padding: 1.1rem 1.2rem;
+  font-size: 1.15rem;
+  border: 2px solid #b7d3df;
+  border-radius: 12px;
+  background: #fafdff;
+  transition: all 0.3s ease;
+  color: #34505e;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: #598294;
+  box-shadow: 0 0 0 3px rgba(89, 130, 148, 0.10);
+}
+
+.text-input::placeholder {
+  color: #9db6c3;
+}
+
+/* Card Columns Section */
+.form-columns.ascent-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+  align-items: flex-start;
+}
+
+.form-column.ascent-card {
+  background: rgba(255,255,255,0.98);
+  border-radius: 22px;
+  box-shadow: 0 4px 16px rgba(52, 80, 94, 0.10);
+  padding: 2.5rem 1.5rem 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s;
+  outline: none;
+  min-height: 220px;
+}
+
+.form-column.ascent-card.open {
+  min-height: 320px;
+}
+
+.form-column.ascent-card:hover,
+.form-column.ascent-card:focus {
+  box-shadow: 0 8px 24px rgba(52, 80, 94, 0.16);
+  background: #fafdff;
+}
+
+.form-column.ascent-card.open .skill-box {
+  animation: skillBoxFadeIn 0.3s;
+  margin-top: 1.2rem;
+}
+
+@keyframes skillBoxFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-column.ascent-card:focus {
+  box-shadow: 0 0 0 3px #b7d3df, 0 8px 24px rgba(52, 80, 94, 0.16);
+}
+
+.ascent-icon {
+  margin-bottom: 1.2rem;
+}
+
+.ascent-card-title {
+  color: #34505e;
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.ascent-card-subtitle {
+  color: #7ba6b6;
+  font-size: 1.08rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.skill-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.skill-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.skill-option:hover {
+  background: #f1f5f9;
+}
+
+.skill-option input[type="radio"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: #598294;
+  cursor: pointer;
+}
+
+.skill-option label {
+  color: #34505e;
+  font-size: 1.05rem;
+  cursor: pointer;
+  flex: 1;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  min-width: 200px;
+  background: #598294;
+  color: white;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.action-button.primary:hover {
+  background: #34505e;
+  transform: translateY(-1px);
+}
+
+.button-icon {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 1024px) {
+  .form-columns.ascent-cards {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .form-column.ascent-card {
+    padding: 2rem 1rem 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .input-form-content {
+    padding: 1.2rem;
+  }
+  .form-title.ascent-title {
+    font-size: 1.5rem;
+  }
+  .text-input-section.ascent-inputs {
+    padding: 1.2rem;
+  }
+  .text-input-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .input-prefix {
+    font-size: 1.1rem;
+    min-width: 0;
+  }
+  .text-input {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.875rem;
+  }
+  .form-columns.ascent-cards {
+    gap: 1rem;
+  }
+  .ascent-card-title {
+    font-size: 1.1rem;
+  }
+  .ascent-card-subtitle {
+    font-size: 0.98rem;
+  }
+  .skill-option {
+    padding: 0.5rem 0.25rem;
+  }
+  .action-button {
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+.skill-box-content {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.skill-box-content.visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
 } 
