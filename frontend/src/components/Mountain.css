@@ -1,3 +1,12 @@
+.dot {
+  position: absolute;
+  background-color: #4F46E5;
+  border: 2px solid #3B32E3;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 40;
+}
+
 .climber {
   width: 50px !important;
   height: 50px !important;

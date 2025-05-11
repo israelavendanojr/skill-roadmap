@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import './Mountain.css';
+import { LearningPlanCard } from './LearningPlanCard';
 
 interface MountainProps {
   dotCount: number; // Number of squares to place along the path
@@ -9,6 +11,7 @@ interface MountainProps {
   startPoint?: { x: number; y: number }; // Start point of the curve
   endPoint?: { x: number; y: number }; // End point of the curve
   climberPosition?: number; // Position of the climber (0 to dotCount-1)
+  plan?: any[]; // The learning plan steps
 }
 
 const defaultPathFunction = (x: number, startPoint: { x: number; y: number }, endPoint: { x: number; y: number }) => {
@@ -44,27 +47,31 @@ const defaultPathFunction = (x: number, startPoint: { x: number; y: number }, en
 };
 
 export const Mountain: React.FC<MountainProps> = ({ 
-  dotCount = 10, // This controls the number of squares
+  dotCount = 10,
   dotSize = 8, 
   dotSpacing = 30,
   pathFunction = defaultPathFunction,
   startPoint = { x: 80, y: 620 },
   endPoint = { x: 500, y: 180 },
-  climberPosition = 0 // Default climber position at start
+  climberPosition = 0,
+  plan = []
 }) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const mountainHeight = 600;
   const mountainWidth = 800;
-  const curveStrength = 0.5; // Controls how curved the path is
 
   // Calculate points along the path using the provided function
   const calculatePathPoints = () => {
     const points: { x: number; y: number }[] = [];
+    const numPoints = plan && plan.length > 0 ? plan.length : dotCount;
+    
+    console.log('Calculating points for plan:', plan);
+    console.log('Number of points:', numPoints);
     
     // Calculate the x positions for each dot, ensuring they stay within start and end points
-    for (let i = 0; i < dotCount; i++) {
+    for (let i = 0; i < numPoints; i++) {
       // Create a non-linear distribution that clusters points towards the top
-      // Using a quadratic function to make points more dense at the top
-      const t = i / (dotCount - 1);
+      const t = i / (numPoints - 1);
       const tAdjusted = Math.sqrt(t); // This makes points more dense at the top
       
       // Calculate x position based on adjusted t
@@ -76,35 +83,11 @@ export const Mountain: React.FC<MountainProps> = ({
     return points;
   };
 
-  // Generate blue points along the path
-  const generatePathPoints = () => {
-    const points = calculatePathPoints();
-    
-    return points.map((point, i) => (
-      <motion.div
-        key={`path-${i}`}
-        className="dot"
-        style={{
-          left: `${(point.x / mountainWidth) * 100}%`,
-          top: `${(point.y / mountainHeight) * 100}%`,
-          width: `${dotSize}px`,
-          height: `${dotSize}px`,
-        }}
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: i * 0.05 }}
-      />
-    ));
-  };
-
-
-
-
-
-
+  const points = calculatePathPoints();
+  console.log('Generated points:', points);
 
   return (
-    <div className="relative w-full h-[600px] bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 border-2 border-red-500">
+    <div className="relative w-full h-[600px] bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
       {/* Mountain Background */}
       <div className="absolute inset-0">
         <svg className="w-full h-full" viewBox={`0 0 ${mountainWidth} ${mountainHeight}`}>
@@ -116,19 +99,62 @@ export const Mountain: React.FC<MountainProps> = ({
         </svg>
       </div>
 
-      {/* Blue Points */}
+      {/* Blue Points and Plan Cards */}
       <div className="absolute inset-0">
-        {generatePathPoints()}
+        {/* Dots (expandable) */}
+        {points.map((point, i) => {
+          const hasStep = plan && plan[i];
+          return (
+            <div key={`dot-${i}`}>
+              <motion.div
+                className={`dot${hasStep ? ' cursor-pointer' : ''}`}
+                style={{
+                  left: `${(point.x / mountainWidth) * 100}%`,
+                  top: `${(point.y / mountainHeight) * 100}%`,
+                  width: `${dotSize}px`,
+                  height: `${dotSize}px`,
+                  zIndex: openIndex === i ? 60 : 40,
+                  border: openIndex === i ? '3px solid #f59e42' : undefined,
+                  boxShadow: openIndex === i ? '0 0 12px #f59e42' : undefined
+                }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.05 }}
+                onClick={() => hasStep ? setOpenIndex(openIndex === i ? null : i) : undefined}
+                tabIndex={hasStep ? 0 : -1}
+                aria-label={hasStep ? `Open step ${i + 1}` : undefined}
+                role={hasStep ? 'button' : undefined}
+                onKeyDown={hasStep ? (e) => { if (e.key === 'Enter' || e.key === ' ') setOpenIndex(openIndex === i ? null : i); } : undefined}
+              />
+              {/* Info Card for this step */}
+              {openIndex === i && hasStep && (
+                <motion.div
+                  className="absolute"
+                  style={{
+                    left: `${(point.x / mountainWidth) * 100}%`,
+                    top: `calc(${(point.y / mountainHeight) * 100}% - 80px)`,
+                    transform: 'translate(-50%, -100%)',
+                    zIndex: 100,
+                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                >
+                  <LearningPlanCard step={plan[i]} index={i} />
+                </motion.div>
+              )}
+            </div>
+          );
+        })}
         
         {/* Climber */}
-        {climberPosition !== undefined && (
+        {climberPosition !== undefined && points[climberPosition] && (
           <motion.div
             className="climber absolute"
             style={{
-              left: `${(calculatePathPoints()[climberPosition].x / mountainWidth) * 100}%`,
-              top: `${(calculatePathPoints()[climberPosition].y / mountainHeight) * 100}%`,
-              zIndex: 100, // Ensure climber appears above other elements
-              position: 'absolute',
+              left: `${(points[climberPosition].x / mountainWidth) * 100}%`,
+              top: `${(points[climberPosition].y / mountainHeight) * 100}%`,
+              zIndex: 200,
             }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -139,13 +165,12 @@ export const Mountain: React.FC<MountainProps> = ({
               alt="Climber" 
               className="w-full h-full" 
               style={{
-                transform: 'translate(-50%, -50%)', // Center the climber on the point
+                transform: 'translate(-50%, -50%)',
               }}
             />
           </motion.div>
         )}
       </div>
-
     </div>
   );
 };

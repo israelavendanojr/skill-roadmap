@@ -4,23 +4,53 @@ import ClimberIcon from '../art/climbers/z.svg';
 
 const LEVELS = ['beginner', 'intermediate', 'advanced', 'expert'];
 
-function InputForm() {
+interface InputFormProps {
+  onPlanReady: (plan: any) => void;
+}
+
+function InputForm({ onPlanReady }: InputFormProps) {
   const [currentLevel, setCurrentLevel] = useState('');
   const [desiredLevel, setDesiredLevel] = useState('');
   const [commitment, setCommitment] = useState('');
   const [learningGoal, setLearningGoal] = useState('');
   const [purpose, setPurpose] = useState('');
   const [openCards, setOpenCards] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', {
-      learningGoal,
-      purpose,
+    setLoading(true);
+    setError(null);
+    const payload = {
+      skill: learningGoal,
+      goalReason: purpose,
       currentLevel,
-      desiredLevel,
-      commitment
-    });
+      targetLevel: desiredLevel,
+      commitment,
+    };
+    try {
+      console.log('Sending payload:', payload);
+      const response = await fetch('http://localhost:5050/api/goal-planner/create-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to create plan');
+        setLoading(false);
+        return;
+      }
+      const data = await response.json();
+      console.log('Received plan data:', data);
+      onPlanReady(data);
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Network error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCardClick = (card: string) => {
@@ -270,12 +300,14 @@ function InputForm() {
             </div>
           </div>
           <div className="button-group">
-            <button type="submit" className="action-button primary">
+            <button type="submit" className="action-button primary" disabled={loading}>
               Start your climb!
               <span className="button-icon"><img src={ClimberIcon} alt="Climber" /></span>
             </button>
           </div>
         </form>
+        {loading && <div className="plan-status">Loading...</div>}
+        {error && <div className="plan-status error">{error}</div>}
       </div>
     </div>
   );
